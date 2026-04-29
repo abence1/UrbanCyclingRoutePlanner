@@ -40,12 +40,12 @@ response = requests.post(url, data={'data': query}, headers=headers)
 
 if response.status_code == 200:
     data = response.json()
-    elements = data.get("elements", [])
-    for i in elements:
-        if i.get("type") == "way":
-            tags = i.get("tags", {})
-            print(tags.get("name", "Unnamed Road"))
-    ways_only = [e for e in data.get("elements", []) if e.get("type") == "way"]
-    print(ways_only)
+    #elements = data.get("elements", [])
+    #for i in elements:
+    #    if i.get("type") == "way":
+    #        tags = i.get("tags", {})
+    #        print(tags.get("name", "Unnamed Road"))
+    #ways_only = [e for e in data.get("elements", []) if e.get("type") == "way"]
+    #print(ways_only)
 else:
     print(f"Error {response.status_code}: {response.text}")
