@@ -86,4 +86,3 @@ def fill_data():
 
 network = ds.Network()     
 fill_data()
-print(len(network.ways))
