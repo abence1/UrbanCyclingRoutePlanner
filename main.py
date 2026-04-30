@@ -1,6 +1,8 @@
 import requests
 import json
 
+import data_structure as ds
+
 url = "https://overpass-api.de/api/interpreter"
 
 headers = {
@@ -10,7 +12,7 @@ headers = {
 
 query = """
 [out:json][timeout:60];
-area["name"="VII. kerület"]->.searchArea;
+area["name"="Budapest"]->.searchArea;
 (
     way["cycleway"]["cycleway"!="no"](area.searchArea);
     way["cycleway:right"]["cycleway:right"!="no"](area.searchArea);
@@ -36,16 +38,52 @@ area["name"="VII. kerület"]->.searchArea;
 out body;
 """
 
-response = requests.post(url, data={'data': query}, headers=headers)
+def api_call():
+    response = requests.post(url, data={'data': query}, headers=headers)
 
-if response.status_code == 200:
-    data = response.json()
-    #elements = data.get("elements", [])
-    #for i in elements:
-    #    if i.get("type") == "way":
-    #        tags = i.get("tags", {})
-    #        print(tags.get("name", "Unnamed Road"))
-    #ways_only = [e for e in data.get("elements", []) if e.get("type") == "way"]
-    #print(ways_only)
-else:
-    print(f"Error {response.status_code}: {response.text}")
+    if response.status_code == 200:
+        return response.json()
+    else:
+        return {"error": f"Error {response.status_code}: {response.text}" }
+
+def fill_data():
+    data = api_call()
+
+    if data.get("error") == None:
+        elements = data.get("elements", [])
+    else:
+        return data.get("error")
+
+    edge_id = 1
+
+    for element in elements:
+        if element.get("type") == "node":
+            node = ds.Node(element.get("id"), element.get("lat"), element.get("lon"))
+            network.nodes[element.get("id")] = node
+
+        if element.get("type") == "way":
+            way_nodes = element.get("nodes", [])
+            way = ds.Way(element.get("id"), element.get("tags"))
+
+            for i in range(len(way_nodes) - 1):
+
+                edge = ds.Edge(edge_id, network.nodes[way_nodes[i]], network.nodes[way_nodes[i + 1]])
+                
+                if element.get("tags", {}).get("oneway") == "yes" and element.get("tags", {}).get("oneway:bicycle") == "no":
+                    network.nodes[way_nodes[i]].connections.append(edge)
+                    network.nodes[way_nodes[i + 1]].connections.append(edge)
+                elif element.get("tags", {}).get("oneway") == "yes":
+                    network.nodes[way_nodes[i]].connections.append(edge)
+                else:
+                    network.nodes[way_nodes[i]].connections.append(edge)
+                    network.nodes[way_nodes[i + 1]].connections.append(edge)
+
+                edge_id += 1
+                way.edges.append(edge)
+
+            network.ways[element.get("id")] = way
+
+
+network = ds.Network()     
+fill_data()
+print(len(network.ways))
