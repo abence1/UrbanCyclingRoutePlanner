@@ -1,6 +1,7 @@
 import requests
 import json
 
+from helpers import calculate_distance
 import data_structure as ds
 
 url = "https://overpass-api.de/api/interpreter"
@@ -67,7 +68,7 @@ def fill_data():
 
             for i in range(len(way_nodes) - 1):
 
-                edge = ds.Edge(edge_id, network.nodes[way_nodes[i]], network.nodes[way_nodes[i + 1]])
+                edge = ds.Edge(edge_id, network.nodes[way_nodes[i]], network.nodes[way_nodes[i + 1]], calculate_distance(way_nodes[i], way_nodes[i + 1], network))
                 
                 if element.get("tags", {}).get("oneway") == "yes" and element.get("tags", {}).get("oneway:bicycle") == "no":
                     network.nodes[way_nodes[i]].connections.append(edge)
