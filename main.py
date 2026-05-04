@@ -1,6 +1,5 @@
 import requests
-import json
-
+from algorithms import dijkstra
 import data_structure as ds
 
 url = "https://overpass-api.de/api/interpreter"
@@ -84,6 +83,15 @@ def fill_data():
             network.ways[element.get("id")] = way
 
 
-network = ds.Network()     
+network = ds.Network()
 fill_data()
-print(len(network.ways))
+
+source = network.nodes.get(12700325860)
+target = network.nodes.get(1613332399)
+
+path, dist = dijkstra(source.node_id, target.node_id, network)
+
+if path is None:
+    print('Target is unreachable.')
+else:
+    print(path, dist)
