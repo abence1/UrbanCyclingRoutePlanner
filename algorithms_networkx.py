@@ -25,8 +25,7 @@ def convert_to_networkx():
 
 def dijkstra(graph, start_node, end_node):
     try:
-        path = nx.dijkstra_path(graph, source=start_node, target=end_node, weight='weight')
-        length = nx.dijkstra_path_length(graph, source=start_node, target=end_node, weight='weight')
+        length, path = nx.single_source_dijkstra(graph, source=start_node, target=end_node, weight='weight')
         return path, length
     except nx.NetworkXNoPath:
         return None, float('inf')
@@ -35,7 +34,7 @@ def astar(graph, start_node, end_node):
     heuristic = lambda start_node, end_node : calculate_distance(start_node, end_node, graph)
     try:
         path = nx.astar_path(graph, source=start_node, target=end_node, heuristic=heuristic, weight='weight')
-        length = nx.astar_path_length(graph, source=start_node, target=end_node, heuristic=heuristic, weight='weight')
+        length = nx.path_weight(graph, path, weight='weight')
         return path, length
     except nx.NetworkXNoPath:
         return None, float('inf')
