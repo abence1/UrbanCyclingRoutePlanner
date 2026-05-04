@@ -2,7 +2,7 @@ import requests
 import json
 
 from helpers import calculate_distance
-from algorithms import dijkstra
+from algorithms import dijkstra, a_star
 import data_structure as ds
 
 url = "https://overpass-api.de/api/interpreter"
@@ -98,3 +98,13 @@ if path is None:
     print('Target is unreachable.')
 else:
     print(path, dist)
+
+source = network.nodes.get(12700325860)
+target = network.nodes.get(1613332399)
+
+path = a_star(source.node_id, target.node_id, network)
+
+if path is None:
+    print('Target is unreachable.')
+else:
+    print(path)
