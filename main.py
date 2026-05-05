@@ -1,9 +1,13 @@
 import requests
 import json
+import networkx as nx
+import math
 
 from helpers import calculate_distance
 from algorithms import dijkstra
+from algorithms_networkx import convert_to_networkx, dijkstra_networkx, astar_networkx
 import data_structure as ds
+from visualize import draw_route, draw_points
 
 url = "https://overpass-api.de/api/interpreter"
 
@@ -98,3 +102,19 @@ if path is None:
     print('Target is unreachable.')
 else:
     print(path, dist)
+
+graph = convert_to_networkx(network)
+
+path, length = astar_networkx(graph, 176913390, 171524952)
+
+central_points = {}
+for i in range(10):
+    betweenness = nx.betweenness_centrality(graph, k = math.floor(math.sqrt(len(network.nodes))))
+    top_nodes = sorted(betweenness.items(), key=lambda x: x[1], reverse=True)
+    if top_nodes[0][0] not in central_points:
+        central_points[top_nodes[0][0]] = 1
+    else:
+        central_points[top_nodes[0][0]] += 1
+draw_points(network, list(central_points))
+
+draw_route(network, path)
