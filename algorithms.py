@@ -1,6 +1,7 @@
 import heapq
 from helpers import calculate_distance
 
+
 def dijkstra(source_node, target_node, network):
     distances = {}
     previous = {}
@@ -51,59 +52,46 @@ def dijkstra(source_node, target_node, network):
 
     return path, distances[target_node]
 
-
 def a_star(start, goal, network):
-    
     if start not in network.nodes:
-        print('Starting point not in the dataset. Try another one!')
-        return None
-    
-    elif start not in network.nodes:
-        print('Starting point not in the dataset. Try another one!')
-        return None
+        #print('Starting point not in the dataset. Try another one!')
+        return None, float('inf')
+    elif goal not in network.nodes:
+        #print('Goal point not in the dataset. Try another one!')
+        return None, float('inf')
 
-    start = network.nodes[start]
-    goal = network.nodes[goal]
-    open_list = [(calculate_distance(start, goal, network), start)]
-    count = 0
-    distances = {start: 0}
-    previous = {}
-    dropped_nodes = set()
+    closed_visited = {}
+    open_visited = []
+    traveled = {start: 0}
 
-    while len(open_list) > 0:
-        current_f, _, current_id = heapq.heappop(open_list)
+    heapq.heappush(open_visited, (0, start))
+
+    while open_visited:
+        current_score, current_id = heapq.heappop(open_visited)
+        current_node = network.nodes[current_id]
 
         if current_id == goal:
             path = []
-            while current_id in previous:
-                path.append(current_id)
-                current_id = previous[current_id]
-            path.append(start)
-            return path[::-1]
-
-        if current_id in dropped_nodes:
-            continue
+            curr = current_id
             
-        dropped_nodes.add(current_id)
-        current_node = network.nodes[current_id]
+            while curr in closed_visited:
+                path.append(curr)
+                curr = closed_visited[curr]
+            path.append(start)
+            path.reverse() 
+
+            return path, traveled[goal]
 
         for edge in current_node.connections:
-            neighbor_node = edge.node2 if edge.node1.node_id == current_id else edge.node1
-            neighbor_id = neighbor_node.node_id
+            neighbor_id = edge.node2 if edge.node1 == current_id else edge.node1        
+            distance_from_start = traveled[current_id] + edge.length
             
-            if neighbor_id in dropped_nodes:
-                continue
+            if neighbor_id not in traveled or distance_from_start < traveled[neighbor_id]:
+                closed_visited[neighbor_id] = current_id
+                traveled[neighbor_id] = distance_from_start
+                h_score = calculate_distance(neighbor_id, goal, network)
+                f_score = distance_from_start + h_score
+                heapq.heappush(open_visited, (f_score, neighbor_id))
 
-            tentative_g = distances[current_id] + edge.length
-
-            if neighbor_id not in distances or tentative_g < distances[neighbor_id]:
-                previous[neighbor_id] = current_id
-                distances[neighbor_id] = tentative_g
-                f_score = tentative_g + calculate_distance(neighbor_node, goal, network)
-                count += 1
-                heapq.heappush(open_list, (f_score, count, neighbor_id))
-
-        return None
-    
-
-    
+    #print("There is no viable path between your starting point and your destination.")
+    return None, float('inf')
