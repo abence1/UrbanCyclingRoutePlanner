@@ -1,10 +1,8 @@
 import networkx as nx
 
-from main import network
-from visualize import draw_map
 from helpers import calculate_distance
 
-def convert_to_networkx():
+def convert_to_networkx(network):
     graph = nx.DiGraph()
 
     for node_id, node in network.nodes.items():
@@ -23,25 +21,19 @@ def convert_to_networkx():
                 graph.add_edge(edge.node2.node_id, edge.node1.node_id, weight=edge.length)
     return graph
 
-def dijkstra(graph, start_node, end_node):
+def dijkstra_networkx(graph, start_node, end_node):
     try:
-        path = nx.dijkstra_path(graph, source=start_node, target=end_node, weight='weight')
-        length = nx.dijkstra_path_length(graph, source=start_node, target=end_node, weight='weight')
+        length, path = nx.single_source_dijkstra(graph, source=start_node, target=end_node, weight='weight')
         return path, length
     except nx.NetworkXNoPath:
         return None, float('inf')
 
-def astar(graph, start_node, end_node):
+def astar_networkx(graph, start_node, end_node):
     heuristic = lambda start_node, end_node : calculate_distance(start_node, end_node, graph)
     try:
         path = nx.astar_path(graph, source=start_node, target=end_node, heuristic=heuristic, weight='weight')
-        length = nx.astar_path_length(graph, source=start_node, target=end_node, heuristic=heuristic, weight='weight')
+        length = nx.path_weight(graph, path, weight='weight')
         return path, length
     except nx.NetworkXNoPath:
         return None, float('inf')
     
-graph = convert_to_networkx()
-
-path, length = astar(graph, 176913390, 171524952)
-
-draw_map(network, path)

@@ -1,6 +1,6 @@
 import folium
 
-def draw_map(network, path):
+def draw_route(network, path):
     map = folium.Map(location=[47.483, 19.052], zoom_start=15)
 
     coord1 = (network.nodes[path[0]].lat, network.nodes[path[0]].lon)
@@ -34,3 +34,14 @@ def draw_map(network, path):
     ).add_to(map)
 
     map.save("route.html")
+
+def draw_points(network, points):
+    map = folium.Map(location=[47.483, 19.052], zoom_start=15)
+    for i in range(len(points)):
+        folium.Marker(
+            location=(network.nodes[points[i]].lat, network.nodes[points[i]].lon),
+            popup="Central point",
+            icon=folium.Icon(color="green", icon="info-sign")
+        ).add_to(map) 
+    
+    map.save("centrality.html")
