@@ -4,7 +4,7 @@ import networkx as nx
 import math
 
 from helpers import calculate_distance
-from algorithms import dijkstra
+from algorithms import dijkstra, a_star
 from algorithms_networkx import convert_to_networkx, dijkstra_networkx, astar_networkx
 import data_structure as ds
 from visualize import draw_route, draw_points
@@ -103,6 +103,15 @@ if path is None:
 else:
     print(path, dist)
 
+source = network.nodes.get(12700325860)
+target = network.nodes.get(1613332399)
+
+path = a_star(source.node_id, target.node_id, network)
+
+if path is None:
+    print('Target is unreachable.')
+else:
+    print(path)
 graph = convert_to_networkx(network)
 
 path, length = astar_networkx(graph, 176913390, 171524952)

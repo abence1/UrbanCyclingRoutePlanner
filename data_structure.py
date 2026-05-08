@@ -22,7 +22,3 @@ class Network:
     def __init__(self):
         self.nodes = {}
         self.ways = {}
-
-
-
-
