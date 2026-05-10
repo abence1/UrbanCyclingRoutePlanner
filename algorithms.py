@@ -83,7 +83,7 @@ def a_star(start, goal, network):
             return path, traveled[goal]
 
         for edge in current_node.connections:
-            neighbor_id = edge.node2 if edge.node1 == current_id else edge.node1        
+            neighbor_id = edge.node2.node_id if edge.node1.node_id == current_id else edge.node1.node_id        
             distance_from_start = traveled[current_id] + edge.length
             
             if neighbor_id not in traveled or distance_from_start < traveled[neighbor_id]:
@@ -95,3 +95,5 @@ def a_star(start, goal, network):
 
     #print("There is no viable path between your starting point and your destination.")
     return None, float('inf')
+
+    

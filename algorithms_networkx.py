@@ -1,4 +1,5 @@
 import networkx as nx
+import math
 
 from helpers import calculate_distance
 
@@ -36,4 +37,15 @@ def astar_networkx(graph, start_node, end_node):
         return path, length
     except nx.NetworkXNoPath:
         return None, float('inf')
+
+def betweenness_centrality(graph, n):
+    central_points = {}
+    for i in range(n):
+        betweenness = nx.betweenness_centrality(graph, k = math.floor(math.sqrt(len(graph.nodes))))
+        top_nodes = sorted(betweenness.items(), key=lambda x: x[1], reverse=True)
+        if top_nodes[0][0] not in central_points:
+            central_points[top_nodes[0][0]] = 1
+        else:
+            central_points[top_nodes[0][0]] += 1
+    return central_points
     
