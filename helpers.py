@@ -1,5 +1,7 @@
 import math
 
+import data_structure as ds
+
 def calculate_distance(node1_id, node2_id, graph):
         R = 6371000
         if hasattr(graph.nodes[node1_id], "lat"):
@@ -26,4 +28,16 @@ def calculate_distance(node1_id, node2_id, graph):
 
         c = 2*math.atan2(math.sqrt(a), math.sqrt(1-a))
 
-        return R*c  
+        return R*c
+
+def closest_node_calculation(network, lat, lon):
+    network.nodes[-1] = ds.Node(-1, lat, lon)
+    closest_node = None
+    closest_distance = float("inf")
+    for i in network.nodes:
+        if i != -1:
+            distance = calculate_distance(-1, i, network)
+            if distance < closest_distance:
+                closest_distance = distance
+                closest_node = i 
+    return closest_node
