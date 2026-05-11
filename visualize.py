@@ -1,7 +1,7 @@
 import folium
 
 def draw_route(network, path):
-    map = folium.Map(location=[47.483, 19.052], zoom_start=15)
+    map = folium.Map(location=[network.nodes[path[0]].lat, network.nodes[path[0]].lon], zoom_start=15)
 
     coord1 = (network.nodes[path[0]].lat, network.nodes[path[0]].lon)
     coord2 = (network.nodes[path[-1]].lat, network.nodes[path[-1]].lon)
@@ -36,7 +36,7 @@ def draw_route(network, path):
     map.save("route.html")
 
 def draw_points(network, points):
-    map = folium.Map(location=[47.483, 19.052], zoom_start=15)
+    map = folium.Map(location=[network.nodes[points[0]].lat, network.nodes[points[0]].lon], zoom_start=15)
     for i in range(len(points)):
         folium.Marker(
             location=(network.nodes[points[i]].lat, network.nodes[points[i]].lon),
