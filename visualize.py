@@ -1,4 +1,5 @@
 import folium
+import matplotlib.pyplot as plt
 from ipyleaflet import Map, Marker
 from ipywidgets import Button, Output, VBox
 
@@ -89,3 +90,36 @@ def interactive_map(network, graph):
     m.on_interaction(handle_click)
 
     return VBox([m, button, out])
+
+def runtime_graph(results):
+    nodes = [r["nodes"] for r in results]
+    labels = [r["area"] for r in results]
+
+    plt.figure(figsize=(10, 6))
+
+    plt.plot(nodes, [r["dijkstra"] for r in results], marker='o', label="Dijkstra algorithm")
+    plt.plot(nodes, [r["a_star"] for r in results], marker='o', label="A* algorithm")
+    plt.plot(nodes, [r["networkx_dijkstra"] for r in results], marker='o', label="NetworkX - Dijkstra")
+    plt.plot(nodes, [r["networkx_astar"] for r in results], marker='o', label="NetworkX - A*")
+
+    plt.xticks(nodes, labels, rotation=45)
+    plt.xlabel("Graph size (nodes)")
+    plt.ylabel("Average runtime (seconds)")
+    plt.title("Algorithm Runtime vs Graph Size")
+    plt.legend()
+    plt.show()
+
+def explored_graph(results):
+    nodes = [r["nodes"] for r in results]
+    labels = [r["area"] for r in results]
+    
+    plt.figure(figsize=(10, 6))
+    plt.plot(nodes, [r["exp_dijkstra"] for r in results], marker='o', label="Dijkstra")
+    plt.plot(nodes, [r["exp_astar"] for r in results], marker='o', label="A* algorithm")
+    plt.xlabel("Graph size (nodes)")
+    plt.ylabel("Nodes explored")
+    plt.title("Nodes Explored vs Graph Size")
+    plt.xticks(nodes, labels, rotation=45)
+    plt.legend()
+    plt.tight_layout()
+    plt.show()

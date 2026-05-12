@@ -93,4 +93,28 @@ def run_benchmark(areas, num_samples):
         })
         
         print(f"Result: Dijkstra: {round(avg_d, 5)}  A*: {round(avg_a, 5)}  NetworkX - Dijkstra: {round(avg_dnx, 5)} NetworkX - A*: {round(avg_anx, 5)}")
-        return results
+    return results
+
+def test():
+    network = fill_data('Budapest')
+
+    if network == "error":
+        print("Error fetching data")
+
+    graph = convert_to_networkx(network)
+
+    start = 12700325860
+    end = 1613332399
+
+    path_dijkstra, len_dijkstra,_ = dijkstra(start, end, network)
+    path_astar, len_astar,_= a_star(start, end, network)
+    path_nxdijkstra, len_nxdijkstra = dijkstra_networkx(graph, start, end)
+    path_nxastar, len_nxastar = astar_networkx(graph, start, end)
+
+    print(path_dijkstra == path_astar)
+    print(path_nxdijkstra == path_nxastar)
+    print(path_nxastar == path_dijkstra)
+
+    print(len_dijkstra-len_astar)
+    print(len_nxastar-len_nxdijkstra)
+    print(len_nxastar-len_dijkstra)
