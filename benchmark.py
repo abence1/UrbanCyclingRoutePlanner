@@ -101,20 +101,18 @@ def test():
     if network == "error":
         print("Error fetching data")
 
-    graph = convert_to_networkx(network)
+    else:
+        graph = convert_to_networkx(network)
 
-    start = 12700325860
-    end = 1613332399
+        start = 12700325860
+        end = 1613332399
 
-    path_dijkstra, len_dijkstra,_ = dijkstra(start, end, network)
-    path_astar, len_astar,_= a_star(start, end, network)
-    path_nxdijkstra, len_nxdijkstra = dijkstra_networkx(graph, start, end)
-    path_nxastar, len_nxastar = astar_networkx(graph, start, end)
+        path_dijkstra, len_dijkstra,_ = dijkstra(start, end, network)
+        path_astar, len_astar,_= a_star(start, end, network)
+        path_nxdijkstra, len_nxdijkstra = dijkstra_networkx(graph, start, end)
+        path_nxastar, len_nxastar = astar_networkx(graph, start, end)
 
-    print(path_dijkstra == path_astar)
-    print(path_nxdijkstra == path_nxastar)
-    print(path_nxastar == path_dijkstra)
-
-    print(len_dijkstra-len_astar)
-    print(len_nxastar-len_nxdijkstra)
-    print(len_nxastar-len_dijkstra)
+        if (path_dijkstra == path_astar) and (path_nxdijkstra == path_nxastar) and (path_nxastar == path_dijkstra) and (len_dijkstra == len_astar) and (len_nxastar == len_nxdijkstra)and(len_nxastar == len_dijkstra):
+            print('The algorithms return the same path and distance.')
+        else:
+            return False
