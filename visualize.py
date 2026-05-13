@@ -40,6 +40,7 @@ def draw_route(network, path):
     ).add_to(map)
 
     map.save("route.html")
+    print("Route saved to route.html")
 
 def draw_points(network, points):
     map = folium.Map(location=[network.nodes[points[0]].lat, network.nodes[points[0]].lon], zoom_start=15)
@@ -51,6 +52,7 @@ def draw_points(network, points):
         ).add_to(map) 
     
     map.save("centrality.html")
+    print("Points saved to centrality.html")
 
 def interactive_map(network, graph):
     first_node = next(iter(network.nodes.values()))
@@ -84,7 +86,10 @@ def interactive_map(network, graph):
             end_node = closest_node_calculation(network, end_coords[0], end_coords[1])
             
             path, dist = dijkstra_networkx(graph, start_node, end_node)
-            draw_route(network, path)
+            if path == None:
+                print("Path not found")
+            else:   
+                draw_route(network, path)
 
     button.on_click(handle_button_click)        
     m.on_interaction(handle_click)
