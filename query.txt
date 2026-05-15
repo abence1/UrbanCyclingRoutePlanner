@@ -24,3 +24,4 @@ area["name"="{area}"]->.searchArea;
 );
 (._; >;);
 out body;
+

@@ -52,7 +52,7 @@ def draw_points(network, points):
         ).add_to(map) 
     
     map.save("centrality.html")
-    print("Points saved to centrality.html")
+    print("Point(s) saved to centrality.html")
 
 def interactive_map(network, graph):
     first_node = next(iter(network.nodes.values()))
@@ -90,7 +90,7 @@ def interactive_map(network, graph):
                 print("Path not found")
             else:   
                 draw_route(network, path)
-
+    
     button.on_click(handle_button_click)        
     m.on_interaction(handle_click)
 

@@ -39,5 +39,7 @@ def closest_node_calculation(network, lat, lon):
             distance = calculate_distance(-1, i, network)
             if distance < closest_distance:
                 closest_distance = distance
-                closest_node = i 
+                closest_node = i
+                
+    del network.nodes[-1]
     return closest_node
